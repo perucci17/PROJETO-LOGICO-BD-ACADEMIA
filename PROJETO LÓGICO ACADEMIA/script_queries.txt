@@ -1,0 +1,64 @@
+-- Recuperações Simples com SELECT Statement
+SELECT * FROM Clientes;
+SELECT * FROM Planos;
+SELECT * FROM Matriculas;
+SELECT * FROM Treinos;
+
+-- Filtros com WHERE Statement
+SELECT * FROM Clientes
+WHERE TIMESTAMPDIFF(YEAR, Data_Nascimento, CURDATE()) > 30;
+
+SELECT * FROM Planos
+WHERE Valor_Mensal > 50.00;
+
+SELECT * FROM Matriculas
+WHERE Status = 'ativo';
+
+SELECT * FROM Treinos
+WHERE Cliente_ID = 1;
+
+-- Crie Expressões para Gerar Atributos Derivados
+SELECT Nome, Data_Nascimento, YEAR(CURDATE()) - YEAR(Data_Nascimento) AS Idade
+FROM Clientes;
+
+SELECT AVG(TIME_TO_SEC(Duracao)) AS Duracao_Media_Segundos
+FROM Treinos;
+
+-- Defina Ordenações dos Dados com ORDER BY
+SELECT * FROM Clientes
+ORDER BY Nome;
+
+SELECT * FROM Planos
+ORDER BY Valor_Mensal DESC;
+
+SELECT * FROM Matriculas
+ORDER BY Data_Inicio;
+
+SELECT * FROM Treinos
+ORDER BY Data_Treino DESC;
+
+-- Condições de Filtros aos Grupos – HAVING Statement
+SELECT 
+    CASE
+        WHEN TIMESTAMPDIFF(YEAR, Data_Nascimento, CURDATE()) BETWEEN 18 AND 30 THEN '18-30 anos'
+        WHEN TIMESTAMPDIFF(YEAR, Data_Nascimento, CURDATE()) BETWEEN 31 AND 50 THEN '31-50 anos'
+        ELSE 'Mais de 50 anos'
+    END AS Faixa_Etaria,
+    COUNT(*) AS Numero_De_Clientes
+FROM Clientes
+GROUP BY Faixa_Etaria;
+
+SELECT Planos.ID, Planos.Nome, COUNT(Matriculas.Cliente_ID) AS Numero_De_Clientes
+FROM Planos
+JOIN Matriculas ON Planos.ID = Matriculas.Plano_ID
+GROUP BY Planos.ID, Planos.Nome
+HAVING COUNT(Matriculas.Cliente_ID) > 5;
+
+-- Crie Junções entre Tabelas para Fornecer uma Perspectiva mais Complexa dos Dados
+SELECT Clientes.Nome AS Nome_Cliente, Matriculas.ID AS Matricula_ID, Matriculas.Data_Inicio, Matriculas.Data_Fim, Matriculas.Status
+FROM Matriculas
+JOIN Clientes ON Matriculas.Cliente_ID = Clientes.ID;
+
+SELECT Clientes.Nome AS Nome_Cliente, Treinos.ID AS Treino_ID, Treinos.Data_Treino, Treinos.Duracao, Treinos.Tipo
+FROM Treinos
+JOIN Clientes ON Treinos.Cliente_ID = Clientes.ID;

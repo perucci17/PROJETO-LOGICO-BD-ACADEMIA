@@ -1,0 +1,46 @@
+-- Criação do Schema
+CREATE DATABASE academia;
+
+-- Usar o Schema criado
+USE academia;
+
+-- Tabela Clientes
+CREATE TABLE Clientes (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Nome VARCHAR(100) NOT NULL,
+    Data_Nascimento DATE,
+    Email VARCHAR(100),
+    Telefone VARCHAR(20),
+    Data_Cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabela Planos
+CREATE TABLE Planos (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Nome VARCHAR(100) NOT NULL,
+    Descricao TEXT,
+    Valor_Mensal DECIMAL(10, 2) NOT NULL
+);
+
+-- Tabela Matrículas
+CREATE TABLE Matriculas (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Cliente_ID INT,
+    Plano_ID INT,
+    Data_Inicio DATE NOT NULL,
+    Data_Fim DATE,
+    Status VARCHAR(50),
+    FOREIGN KEY (Cliente_ID) REFERENCES Clientes(ID),
+    FOREIGN KEY (Plano_ID) REFERENCES Planos(ID)
+);
+
+-- Tabela Treinos
+CREATE TABLE Treinos (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Cliente_ID INT,
+    Data_Treino DATE,
+    Duracao TIME,
+    Tipo VARCHAR(50),
+    Calorias_Queimadas INT,
+    FOREIGN KEY (Cliente_ID) REFERENCES Clientes(ID)
+);
